@@ -7,9 +7,10 @@ import (
 )
 
 func main() {
-	// Uncomment this block to pass the first stage
 	fmt.Fprint(os.Stdout, "$ ")
 
-	// Wait for user input
-	bufio.NewReader(os.Stdin).ReadString('\n')
+	// Read user input
+	command, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+	// Print default message
+	fmt.Println(unknownCommand(command))
 }
