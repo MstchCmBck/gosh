@@ -1,5 +1,10 @@
 package main
 
+import (
+	"os"
+)
+
 func main() {
-	run()
+	errCode := run()
+	os.Exit(errCode)
 }
