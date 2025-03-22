@@ -15,6 +15,5 @@ func (e EchoCommand) Execute() (string, error) {
 	for _, arg := range e {
 		output += arg + " "
 	}
-	output += string('\n')
 	return output, nil
 }

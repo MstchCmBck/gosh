@@ -2,7 +2,8 @@ package command
 
 import (
 	"os/exec"
-	"strings"
+
+	"github.com/codecrafters-io/shell-starter-go/app/parser"
 )
 
 // CommandBuilder is a function that takes a string and returns a Command
@@ -12,65 +13,17 @@ type CommandBuilder func(params []string) Command
 // It's populated by the init() function of each command
 var builtinCommands = make(map[string]CommandBuilder)
 
-func Factory(command string) Command {
-	// Extract the command name and its parameters
-	splittedcommand := parseInput(command)
-	commandName := splittedcommand[0]
-	parameters := splittedcommand[1:]
-
+func Factory(command *parser.Parser) Command {
 	// Switch case to determine which command to return
-	if builder, exists := builtinCommands[commandName]; exists {
-		return builder(parameters)
+	if builder, exists := builtinCommands[command.GetCommand()]; exists {
+		return builder(command.GetArgs())
 	}
 
-	_, err := exec.LookPath(commandName)
+	_, err := exec.LookPath(command.GetCommand())
 	if err == nil {
-		return ExeCommand{commandName, parameters}
+		return ExeCommand{command.GetCommand(), command.GetArgs()}
 	}
 
 	// For any other case, return an UnknownCommand
-	return UnknownCommand(commandName)
-}
-
-func parseInput(input string) []string {
-	var tokens []string
-	var currentToken strings.Builder
-	inSingleQuote := false
-	inDoubleQuote := false
-	escapeNext := false
-
-	for i, char := range input {
-		switch {
-		case escapeNext:
-			currentToken.WriteRune(char)
-			escapeNext = false
-		case char == '\\' && !inDoubleQuote && !inSingleQuote:
-			escapeNext = true
-		case char == '\\' && inDoubleQuote:
-			if input[i+1] == '"' || input[i+1] == '\\' || input[i+1] == '$' {
-				escapeNext = true
-			} else {
-				currentToken.WriteRune(char)
-			}
-		case char == '\'' && !inDoubleQuote:
-			inSingleQuote = !inSingleQuote
-		case char == '"' && !inSingleQuote:
-			inDoubleQuote = !inDoubleQuote
-		case char == ' ' && !inSingleQuote && !inDoubleQuote:
-			if currentToken.Len() > 0 {
-				tokens = append(tokens, currentToken.String())
-				currentToken.Reset()
-			}
-		case char == '\n' && !inSingleQuote && !inDoubleQuote:
-			continue
-		default:
-			currentToken.WriteRune(char)
-		}
-	}
-
-	if currentToken.Len() > 0 {
-		tokens = append(tokens, currentToken.String())
-	}
-
-	return tokens
+	return UnknownCommand(command.GetCommand())
 }
