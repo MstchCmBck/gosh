@@ -7,12 +7,12 @@ import "os"
 // - Execute() method to execute the command
 
 func init() {
-	builtinCommands["pwd"] = func(params string) Command {
+	builtinCommands["pwd"] = func(params []string) Command {
 		return PwdCommand(params)
 	}
 }
 
-type PwdCommand string
+type PwdCommand []string
 
 func (p PwdCommand) Execute() error {
 	wd, err := os.Getwd()

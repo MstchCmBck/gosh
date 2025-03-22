@@ -3,7 +3,6 @@ package command
 import (
 	"fmt"
 	"os/exec"
-	"strings"
 )
 
 // Each new Command must implement the following functions:
@@ -14,12 +13,11 @@ import (
 
 type ExeCommand struct {
 	commandName string
-	parameters  string
+	parameters  []string
 }
 
 func (e ExeCommand) Execute() error {
-	fields := strings.Fields(e.parameters)
-	out, err := exec.Command(e.commandName, fields...).Output()
+	out, err := exec.Command(e.commandName, e.parameters...).Output()
 	fmt.Print(string(out))
 	return err
 }

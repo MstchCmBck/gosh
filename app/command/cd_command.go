@@ -10,17 +10,17 @@ import (
 // - Execute() method to execute the command
 
 func init() {
-	builtinCommands["cd"] = func(params string) Command {
+	builtinCommands["cd"] = func(params []string) Command {
 		return CdCommand(params)
 	}
 }
 
-type CdCommand string
+type CdCommand []string
 
 func (c CdCommand) Execute() error {
 	var err error
-	dir := string(c)
-	if c == "~" {
+	dir := string(c[0])
+	if c[0] == "~" {
 		dir, err = os.UserHomeDir()
 		if err != nil {
 			return err
@@ -28,7 +28,7 @@ func (c CdCommand) Execute() error {
 	}
 	err = os.Chdir(dir)
 	if err != nil {
-		err = errors.New("cd: " + string(c) + ": No such file or directory")
+		err = errors.New("cd: " + string(c[0]) + ": No such file or directory")
 	}
 	return err
 }
