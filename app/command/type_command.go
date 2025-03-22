@@ -17,8 +17,8 @@ func init() {
 func (t TypeCommand) Execute() error {
 	_, find := builtinCommands[string(t)]
 	if !find {
-		err := UnknownCommand(t).Execute()
-		return err
+		fmt.Println(t + ": not found")
+		return nil
 	}
 	fmt.Println(t + " is a shell builtin")
 	return nil
