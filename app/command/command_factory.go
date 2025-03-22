@@ -1,6 +1,7 @@
 package command
 
 import (
+	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -22,6 +23,11 @@ func Factory(command string) Command {
 	// Switch case to determine which command to return
 	if builder, exists := builtinCommands[commandName]; exists {
 		return builder(parameters)
+	}
+
+	_, err := exec.LookPath(commandName)
+	if err == nil {
+		return ExeCommand{commandName, parameters}
 	}
 
 	// For any other case, return an UnknownCommand
