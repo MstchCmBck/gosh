@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/codecrafters-io/shell-starter-go/app/command"
 )
 
 func main() {
@@ -12,8 +14,8 @@ func main() {
 		fmt.Fprint(os.Stdout, "$ ")
 		// Read user input
 		userInput, _ := bufio.NewReader(os.Stdin).ReadString('\n')
-		command := commandFactory(userInput)
-		if err := command.Execute(); err != nil {
+		cmd := command.Factory(userInput)
+		if err := cmd.Execute(); err != nil {
 			fmt.Println(err)
 		}
 	}

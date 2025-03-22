@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"regexp"
@@ -12,7 +12,7 @@ type CommandBuilder func(params string) Command
 // It's populated by the init() function of each command
 var builtinCommands = make(map[string]CommandBuilder)
 
-func commandFactory(command string) Command {
+func Factory(command string) Command {
 	// Extract the command name and its parameters
 	re := regexp.MustCompile(`^(\w+)(.*)`)
 	splittedCommand := re.FindSubmatch([]byte(command))

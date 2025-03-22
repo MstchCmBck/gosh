@@ -1,4 +1,4 @@
-package main
+package command
 
 // Each new Command must implement the following functions:
 // - init() function to register the command in the builtinCommands map

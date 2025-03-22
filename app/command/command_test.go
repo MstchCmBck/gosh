@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"bytes"
@@ -12,19 +12,19 @@ func TestCommandFactoryForExitCommand(t *testing.T) {
 	command := "exit 123"
 	want := ExitCommand("123")
 
-	if got := commandFactory(command); got != want {
+	if got := Factory(command); got != want {
 		t.Errorf("commandFactory(%q) = %q; want %q", command, got, want)
 	}
 
 	command = "exit"
 	want = ExitCommand("")
-	if got := commandFactory(command); got != want {
+	if got := Factory(command); got != want {
 		t.Errorf("commandFactory(%q) = %q; want %q", command, got, want)
 	}
 
 	command = "exit123"
 	want2 := UnknownCommand("exit123")
-	if got := commandFactory(command); got != want2 {
+	if got := Factory(command); got != want2 {
 		t.Errorf("commandFactory(%q) = %q; want %q", command, got, want2)
 	}
 }
@@ -34,7 +34,7 @@ func TestCommandFactoryForUnknownCommand(t *testing.T) {
 	command := "unknown_command"
 	want := UnknownCommand("unknown_command")
 
-	if got := commandFactory(command); got != want {
+	if got := Factory(command); got != want {
 		t.Errorf("commandFactory(%q) = %q; want %q", command, got, want)
 	}
 }
