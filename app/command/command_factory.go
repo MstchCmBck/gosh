@@ -44,7 +44,7 @@ func parseInput(input string) []string {
 		case escapeNext:
 			currentToken.WriteRune(char)
 			escapeNext = false
-		case char == '\\' && !inDoubleQuote:
+		case char == '\\' && !inDoubleQuote && !inSingleQuote:
 			escapeNext = true
 		case char == '\'' && !inDoubleQuote:
 			inSingleQuote = !inSingleQuote
