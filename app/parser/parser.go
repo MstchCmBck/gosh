@@ -71,7 +71,6 @@ func (p *Parser) GetArgs() []string {
 }
 
 func (p *Parser) createTokens(input string) {
-	var tokens []string
 	var currentToken strings.Builder
 	inSingleQuote := false
 	inDoubleQuote := false
@@ -96,7 +95,7 @@ func (p *Parser) createTokens(input string) {
 			inDoubleQuote = !inDoubleQuote
 		case char == ' ' && !inSingleQuote && !inDoubleQuote:
 			if currentToken.Len() > 0 {
-				p.tokens = append(tokens, currentToken.String())
+				p.tokens = append(p.tokens, currentToken.String())
 				currentToken.Reset()
 			}
 		case char == '\n' && !inSingleQuote && !inDoubleQuote:
@@ -113,25 +112,28 @@ func (p *Parser) createTokens(input string) {
 
 func (p *Parser) getRedirectionToken() (Redirection, int, error) {
 	// Implement redirection parsing
-	var i int
-	var token string
-	var redirection Redirection
+	redirection := NoRedirection
+	redirectionIndex := len(p.tokens)
 
-	for i, token = range p.tokens {
+	for i, token := range p.tokens {
 		if token == ">" || token == "1>" {
 			redirection = Stdout
+			redirectionIndex = i
+			break
 		} else if token == ">>" {
 			redirection = StdoutAppend
+			redirectionIndex = i
+			break
 		} else if token == "2>" {
 			redirection = Stderr
-		} else {
-			redirection = NoRedirection
+			redirectionIndex = i
+			break
 		}
 	}
 
-	if i == len(p.tokens)-1 && redirection != NoRedirection {
-		return NoRedirection, i, errors.New("no file specified for redirection")
+	if redirectionIndex == len(p.tokens)-1 && redirection != NoRedirection {
+		return NoRedirection, redirectionIndex, errors.New("no file specified for redirection")
 	}
 
-	return redirection, i, nil
+	return redirection, redirectionIndex, nil
 }
