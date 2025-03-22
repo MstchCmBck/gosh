@@ -28,6 +28,6 @@ func (t TypeCommand) Execute() error {
 		return nil
 	}
 
-	fmt.Println(string(t) + " is " + path + "/" + string(t))
+	fmt.Println(string(t) + " is " + path)
 	return nil
 }
