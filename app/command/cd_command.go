@@ -1,7 +1,7 @@
 package command
 
 import (
-	"fmt"
+	"errors"
 	"os"
 )
 
@@ -20,7 +20,7 @@ type CdCommand string
 func (c CdCommand) Execute() error {
 	err := os.Chdir(string(c))
 	if err != nil {
-		fmt.Println("cd: " + string(c) + ": No such file or directory")
+		err = errors.New("cd: " + string(c) + ": No such file or directory")
 	}
-	return nil
+	return err
 }
