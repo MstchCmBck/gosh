@@ -39,13 +39,19 @@ func parseInput(input string) []string {
 	inDoubleQuote := false
 	escapeNext := false
 
-	for _, char := range input {
+	for i, char := range input {
 		switch {
 		case escapeNext:
 			currentToken.WriteRune(char)
 			escapeNext = false
 		case char == '\\' && !inDoubleQuote && !inSingleQuote:
 			escapeNext = true
+		case char == '\\' && inDoubleQuote:
+			if input[i+1] == '"' || input[i+1] == '\\' || input[i+1] == '$' {
+				escapeNext = true
+			} else {
+				currentToken.WriteRune(char)
+			}
 		case char == '\'' && !inDoubleQuote:
 			inSingleQuote = !inSingleQuote
 		case char == '"' && !inSingleQuote:
