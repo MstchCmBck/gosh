@@ -3,7 +3,6 @@ package command
 import (
 	"errors"
 	"os"
-	"regexp"
 	"strconv"
 )
 
@@ -19,13 +18,11 @@ func init() {
 
 func (e ExitCommand) Execute() error {
 	// If the command has no parameters, exit with code 0
-	if e[0] == "" {
+	if len(e) == 0 {
 		os.Exit(0)
 	}
-	// Will match "exit 123", not match "exit" or "exit123"
-	re := regexp.MustCompile(`^(\d+).*`)
 	// Extract the errCode from the command
-	errCode, err := strconv.Atoi(string(re.FindSubmatch([]byte(e[0]))[1]))
+	errCode, err := strconv.Atoi(e[0])
 	// If the conversion fails, consider the command as not an exit command
 	if err != nil {
 		return errors.New("exit command parameter is not a number")

@@ -10,7 +10,7 @@ import (
 func TestCommandFactoryForExitCommand(t *testing.T) {
 	// Test with an exit command
 	command := "exit 123"
-	want := ExitCommand("123")
+	want := ExitCommand(["123"])
 
 	if got := Factory(command); got != want {
 		t.Errorf("commandFactory(%q) = %q; want %q", command, got, want)
