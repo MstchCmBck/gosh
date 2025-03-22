@@ -19,6 +19,8 @@ func commandFactory(command string) Command {
 	// Switch case to determine which command to return
 	if commandName == "exit" {
 		return ExitCommand(parameters)
+	} else if commandName == "echo" {
+		return EchoCommand(parameters)
 	}
 
 	// For any other case, return an UnknownCommand
@@ -55,6 +57,12 @@ func (e ExitCommand) Execute() error {
 type UnknownCommand string
 
 func (u UnknownCommand) Execute() error {
-	fmt.Println(u + ": command not found")
-	return errors.New("unknown command")
+	return errors.New(string(u) + ": command not found")
+}
+
+type EchoCommand string
+
+func (e EchoCommand) Execute() error {
+	fmt.Println(e)
+	return nil
 }
