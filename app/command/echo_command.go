@@ -1,9 +1,5 @@
 package command
 
-import (
-	"fmt"
-)
-
 // EchoCommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
 type EchoCommand []string
@@ -14,10 +10,11 @@ func init() {
 	}
 }
 
-func (e EchoCommand) Execute() error {
+func (e EchoCommand) Execute() (string, error) {
+	var output string
 	for _, arg := range e {
-		fmt.Print(arg + " ")
+		output += arg + " "
 	}
-	fmt.Println()
-	return nil
+	output += string('\n')
+	return output, nil
 }

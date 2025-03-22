@@ -5,5 +5,5 @@ package command
 // - Execute() method to execute the command
 
 type Command interface {
-	Execute() error
+	Execute() (string, error)
 }

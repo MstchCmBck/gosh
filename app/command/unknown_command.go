@@ -10,6 +10,6 @@ type UnknownCommand string
 
 // No need to register the UnknownCommand in the builtinCommands map as it's the default command
 
-func (u UnknownCommand) Execute() error {
-	return errors.New(string(u) + ": command not found")
+func (u UnknownCommand) Execute() (string, error) {
+	return "", errors.New(string(u) + ": command not found")
 }

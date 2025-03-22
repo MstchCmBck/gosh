@@ -14,11 +14,10 @@ func init() {
 
 type PwdCommand []string
 
-func (p PwdCommand) Execute() error {
+func (p PwdCommand) Execute() (string, error) {
 	wd, err := os.Getwd()
 	if err != nil {
-		return err
+		return "", err
 	}
-	println(wd)
-	return nil
+	return wd, nil
 }
