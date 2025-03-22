@@ -1,6 +1,9 @@
 package main
 
 import (
+	"bytes"
+	"os"
+	"strings"
 	"testing"
 )
 
@@ -33,5 +36,36 @@ func TestCommandFactoryForUnknownCommand(t *testing.T) {
 
 	if got := commandFactory(command); got != want {
 		t.Errorf("commandFactory(%q) = %q; want %q", command, got, want)
+	}
+}
+
+func TestUnknownCommand(t *testing.T) {
+	// Capture stdout
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	// Run command
+	cmd := UnknownCommand("testcmd")
+	err := cmd.Execute()
+
+	// Restore stdout
+	w.Close()
+	os.Stdout = old
+
+	// Read captured output
+	var buf bytes.Buffer
+	buf.ReadFrom(r)
+	output := strings.TrimSpace(buf.String())
+
+	// Assert expectations
+	if err == nil {
+		t.Error("Expected error but got none")
+	}
+	if err.Error() != "unknown command" {
+		t.Errorf("Expected error 'unknown command' but got '%v'", err)
+	}
+	if output != "testcmd: command not found" {
+		t.Errorf("Expected output 'testcmd: command not found' but got '%v'", output)
 	}
 }
