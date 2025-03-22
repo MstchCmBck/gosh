@@ -1,6 +1,9 @@
 package command
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 // Each new Command must implement the following functions:
 // - init() function to register the command in the builtinCommands map
@@ -16,5 +19,8 @@ type CdCommand string
 
 func (c CdCommand) Execute() error {
 	err := os.Chdir(string(c))
-	return err
+	if err != nil {
+		fmt.Println("cd: " + string(c) + ": No such file or directory")
+	}
+	return nil
 }
