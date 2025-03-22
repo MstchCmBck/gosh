@@ -18,7 +18,15 @@ func init() {
 type CdCommand string
 
 func (c CdCommand) Execute() error {
-	err := os.Chdir(string(c))
+	var err error
+	dir := string(c)
+	if c == "~" {
+		dir, err = os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+	}
+	err = os.Chdir(dir)
 	if err != nil {
 		err = errors.New("cd: " + string(c) + ": No such file or directory")
 	}
