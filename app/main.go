@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/codecrafters-io/shell-starter-go/app/command"
-	"github.com/codecrafters-io/shell-starter-go/app/parser"
 )
 
 func main() {
@@ -14,19 +13,20 @@ func main() {
 		// Print the prompt
 		fmt.Fprint(os.Stdout, "$ ")
 		// Read user input
-		userInput, _ := bufio.NewReader(os.Stdin).ReadString('\n')
-		prsr := parser.NewParser(userInput)
-		cmd := command.Factory(prsr)
-		output, err := cmd.Execute()
+		input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		cmd := command.Factory(input)
+		_, err := cmd.Execute()
 		if err != nil {
 			fmt.Print(err)
 		}
 
-		if prsr.Redirection == parser.Stdout {
-			os.WriteFile(prsr.Filepath, []byte(output), 0644)
-		} else {
-			fmt.Println(output)
-		}
+		// TODO: This should be handle by the command itself
+		// To remove soon
+		// if prsr.Redirection == parser.Stdout {
+		// 	os.WriteFile(prsr.Filepath, []byte(output), 0644)
+		// } else {
+		// 	fmt.Println(output)
+		// }
 
 	}
 }
