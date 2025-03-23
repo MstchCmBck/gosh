@@ -1,5 +1,7 @@
 package command
 
+import "fmt"
+
 // unknowncommand string contains the command name that is unknown
 // It implement the Execute method of the Command interface
 type unknowncommand commandline
@@ -9,6 +11,6 @@ type unknowncommand commandline
 func (u unknowncommand) Execute() error {
 	unknown := string(u.name)
 	output := unknown + ": command not found\n"
-	printOut(output, commandline(u))
+	fmt.Fprint(u.stdout, output)
 	return nil
 }

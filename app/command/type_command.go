@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"os/exec"
 )
 
@@ -21,21 +22,18 @@ func (t typecommand) Execute() error {
 	_, find := builtinCommands[program]
 	if find {
 		output = program + " is a shell builtin\n"
-		printOut(output, commandline(t))
-		printErr("", commandline(t))
+		fmt.Fprint(t.stdout, output)
 		return nil
 	}
 
 	path, err := exec.LookPath(program)
 	if err != nil {
 		output = program + ": not found\n"
-		printOut(output, commandline(t))
-		printErr("", commandline(t))
+		fmt.Fprint(t.stdout, output)
 		return nil
 	}
 
 	output = program + " is " + path + "\n"
-	printOut(output, commandline(t))
-	printErr("", commandline(t))
+	fmt.Fprint(t.stdout, output)
 	return nil
 }

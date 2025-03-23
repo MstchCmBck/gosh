@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -30,7 +31,6 @@ func (c cdcommand) Execute() error {
 	if err != nil {
 		message = "cd: " + dir + ": No such file or directory\n"
 	}
-	printOut(message, commandline(c))
-	printErr("", commandline(c))
+	fmt.Fprint(c.stdout, message)
 	return err
 }

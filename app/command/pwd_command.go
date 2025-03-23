@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -22,7 +23,6 @@ func (p pwdcommand) Execute() error {
 		return err
 	}
 	wd += "\n"
-	printOut(wd, commandline(p))
-	printErr("", commandline(p))
+	fmt.Fprint(p.stdout, wd)
 	return nil
 }

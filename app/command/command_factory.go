@@ -1,8 +1,7 @@
 package command
 
 import (
-	"errors"
-	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -35,29 +34,9 @@ func Factory(input string) Command {
 
 // NewParser creates a new parser and immediately parses the input
 func newParser(input string) commandline {
-	var command commandline
 	tokens := createTokens(input)
-	command.name = tokens[0] // Simple example, adjust as needed
-	command.redirection = noredirection
-	command.args = []string{}
-	if len(tokens) < 2 {
-		return command
-	}
-	var index int
-	var err error
-	command.redirection, index, err = getRedirectionToken(tokens)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	if command.redirection != noredirection {
-		command.filepath = tokens[index+1]
-		command.args = tokens[1:index]
-	} else {
-		command.args = tokens[1:]
-	}
-
-	return command
+	cmd := createCommand(tokens)
+	return cmd
 }
 
 func createTokens(input string) []string {
@@ -104,36 +83,55 @@ func createTokens(input string) []string {
 	return tokens
 }
 
-func getRedirectionToken(tokens []string) (redirection, int, error) {
-	// Implement redirection parsing
-	redirection := noredirection
-	redirectionIndex := len(tokens)
+func createCommand(tokens []string) commandline {
+	var cmd commandline
+	cmd.name = tokens[0]
+	cmd.stdin = os.Stdin
+	cmd.stdout = os.Stdout
+	cmd.stderr = os.Stderr
 
+	// The user input is just one token
+	// We just have a command name
+	if len(tokens) == 1 {
+		return cmd
+	}
+
+	i, token := findRedirectToken(tokens)
+
+	cmd.args = tokens[1:i]
+
+	// The user doesn't give a filepath after the redirection
+	// We keep the stdout as it is
+	if len(tokens) == i {
+		return cmd
+	}
+
+	filepath := tokens[i+1]
+
+	setStdout(token, cmd, filepath)
+
+	return cmd
+}
+
+func findRedirectToken(tokens []string) (int, string) {
 	for i, token := range tokens {
-		switch token {
-		case ">", "1>":
-			redirection = stdout
-			redirectionIndex = i
-			goto tokenfounds
-		case ">>", "1>>":
-			redirection = stdoutappend
-			redirectionIndex = i
-			goto tokenfounds
-		case "2>":
-			redirection = stderr
-			redirectionIndex = i
-			goto tokenfounds
-		case "2>>":
-			redirection = stderrappend
-			redirectionIndex = i
-			goto tokenfounds
+		if (len(token) == 1 && token[0] == '>') ||
+			(len(token) == 2 && token[1] == '>') {
+			return i, token
 		}
 	}
-tokenfounds:
+	return len(tokens), ""
+}
 
-	if redirectionIndex == len(tokens)-1 && redirection != noredirection {
-		return noredirection, redirectionIndex, errors.New("no file specified for redirection")
+func setStdout(token string, cmd commandline, filepath string) {
+	switch token {
+	case ">", "1>":
+		cmd.stdout, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	case ">>", "1>>":
+		cmd.stdout, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	case "2>":
+		cmd.stderr, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	case "2>>":
+		cmd.stderr, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	}
-
-	return redirection, redirectionIndex, nil
 }
