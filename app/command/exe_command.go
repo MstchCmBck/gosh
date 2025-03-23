@@ -20,5 +20,7 @@ func (e execommand) Execute() error {
 	out.Stdout = e.stdout
 
 	err := out.Run()
+
+	close(commandline(e))
 	return err
 }

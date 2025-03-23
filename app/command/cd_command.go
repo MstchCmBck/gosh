@@ -32,5 +32,7 @@ func (c cdcommand) Execute() error {
 		message = "cd: " + dir + ": No such file or directory\n"
 	}
 	fmt.Fprint(c.stdout, message)
+
+	close(commandline(c))
 	return err
 }

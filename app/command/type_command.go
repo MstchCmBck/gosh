@@ -35,5 +35,7 @@ func (t typecommand) Execute() error {
 
 	output = program + " is " + path + "\n"
 	fmt.Fprint(t.stdout, output)
+
+	close(commandline(t))
 	return nil
 }

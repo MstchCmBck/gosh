@@ -28,5 +28,7 @@ func (e exitcommand) Execute() error {
 		return errors.New("exit command parameter is not a number")
 	}
 	os.Exit(errCode)
+
+	close(commandline(e))
 	return nil
 }

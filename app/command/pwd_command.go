@@ -24,5 +24,7 @@ func (p pwdcommand) Execute() error {
 	}
 	wd += "\n"
 	fmt.Fprint(p.stdout, wd)
+
+	close(commandline(p))
 	return nil
 }

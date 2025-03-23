@@ -12,5 +12,7 @@ func (u unknowncommand) Execute() error {
 	unknown := string(u.name)
 	output := unknown + ": command not found\n"
 	fmt.Fprint(u.stdout, output)
+
+	close(commandline(u))
 	return nil
 }

@@ -19,5 +19,7 @@ func (e echocommand) Execute() error {
 	}
 	output += "\n"
 	fmt.Fprint(e.stdout, output)
+
+	close(commandline(e))
 	return nil
 }
