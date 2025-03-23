@@ -1,7 +1,6 @@
 package command
 
 import (
-	"errors"
 	"os"
 )
 
@@ -28,7 +27,7 @@ func (c cdcommand) Execute() error {
 	}
 	err = os.Chdir(dir)
 	if err != nil {
-		err = errors.New("cd: " + dir + ": No such file or directory")
+		print("cd: "+dir+": No such file or directory\n", commandline(c))
 	}
 	return err
 }
