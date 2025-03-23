@@ -7,11 +7,11 @@ import (
 )
 
 type Parser struct {
+	Name        string
+	Args        []string
+	Redirection Redirection
+	Filepath    string
 	tokens      []string
-	command     string
-	args        []string
-	redirection Redirection
-	filepath    string
 }
 
 type Redirection int
@@ -28,46 +28,27 @@ const (
 func NewParser(input string) *Parser {
 	p := &Parser{}
 	p.createTokens(input)
-	p.command = p.tokens[0] // Simple example, adjust as needed
-	p.redirection = NoRedirection
-	p.args = []string{}
+	p.Name = p.tokens[0] // Simple example, adjust as needed
+	p.Redirection = NoRedirection
+	p.Args = []string{}
 	if len(p.tokens) < 2 {
 		return p
 	}
 	var index int
 	var err error
-	p.redirection, index, err = p.getRedirectionToken()
+	p.Redirection, index, err = p.getRedirectionToken()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	if p.redirection != NoRedirection {
-		p.filepath = p.tokens[index+1]
-		p.args = p.tokens[1:index]
+	if p.Redirection != NoRedirection {
+		p.Filepath = p.tokens[index+1]
+		p.Args = p.tokens[1:index]
 	} else {
-		p.args = p.tokens[1:]
+		p.Args = p.tokens[1:]
 	}
 
 	return p
-}
-
-// GetCommand returns the parsed command
-func (p *Parser) GetCommand() string {
-	return p.command
-}
-
-// GetRedirection returns any redirection found
-func (p *Parser) GetRedirection() Redirection {
-	return p.redirection
-}
-
-func (p *Parser) GetFilepath() string {
-	return p.filepath
-}
-
-// GetArgs returns command arguments
-func (p *Parser) GetArgs() []string {
-	return p.args
 }
 
 func (p *Parser) createTokens(input string) {

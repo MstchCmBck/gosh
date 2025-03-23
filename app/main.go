@@ -22,8 +22,8 @@ func main() {
 			fmt.Print(err)
 		}
 
-		if prsr.GetRedirection() == parser.Stdout {
-			os.WriteFile(prsr.GetFilepath(), []byte(output), 0644)
+		if prsr.Redirection == parser.Stdout {
+			os.WriteFile(prsr.Filepath, []byte(output), 0644)
 		} else {
 			fmt.Println(output)
 		}

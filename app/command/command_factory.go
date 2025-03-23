@@ -15,15 +15,15 @@ var builtinCommands = make(map[string]CommandBuilder)
 
 func Factory(command *parser.Parser) Command {
 	// Switch case to determine which command to return
-	if builder, exists := builtinCommands[command.GetCommand()]; exists {
-		return builder(command.GetArgs())
+	if builder, exists := builtinCommands[command.Name]; exists {
+		return builder(command.Args)
 	}
 
-	_, err := exec.LookPath(command.GetCommand())
+	_, err := exec.LookPath(command.Name)
 	if err == nil {
-		return ExeCommand{command.GetCommand(), command.GetArgs()}
+		return ExeCommand{command.Name, command.Args}
 	}
 
 	// For any other case, return an UnknownCommand
-	return UnknownCommand(command.GetCommand())
+	return UnknownCommand(command.Name)
 }
