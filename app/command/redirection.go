@@ -15,13 +15,21 @@ const (
 	stderrappend
 )
 
-// This function is used by all the built-in function to print their result
-func print(input string, cmd commandline) {
+// This function is used by all the built-in function to printOut their result
+func printOut(input string, cmd commandline) {
 	switch cmd.redirection {
 	case stdout:
+		printFile(input, cmd.filepath)
+	default:
+		fmt.Print(input)
+	}
+}
+
+// This function is used by all the built-in function to printOut their result
+func printErr(input string, cmd commandline) {
+	switch cmd.redirection {
 	case stderr:
 		printFile(input, cmd.filepath)
-	case noredirection:
 	default:
 		fmt.Print(input)
 	}

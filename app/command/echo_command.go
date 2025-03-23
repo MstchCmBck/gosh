@@ -16,6 +16,7 @@ func (e echocommand) Execute() error {
 		output += arg + " "
 	}
 	output += "\n"
-	print(output, commandline(e))
+	printOut(output, commandline(e))
+	printErr("", commandline(e))
 	return nil
 }

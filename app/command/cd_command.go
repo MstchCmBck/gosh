@@ -26,8 +26,11 @@ func (c cdcommand) Execute() error {
 		}
 	}
 	err = os.Chdir(dir)
+	var message string
 	if err != nil {
-		print("cd: "+dir+": No such file or directory\n", commandline(c))
+		message = "cd: " + dir + ": No such file or directory\n"
 	}
+	printOut(message, commandline(c))
+	printErr("", commandline(c))
 	return err
 }
