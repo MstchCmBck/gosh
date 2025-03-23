@@ -110,20 +110,26 @@ func getRedirectionToken(tokens []string) (redirection, int, error) {
 	redirectionIndex := len(tokens)
 
 	for i, token := range tokens {
-		if token == ">" || token == "1>" {
+		switch token {
+		case ">", "1>":
 			redirection = stdout
 			redirectionIndex = i
-			break
-		} else if token == ">>" {
+			goto tokenfounds
+		case ">>", "1>>":
 			redirection = stdoutappend
 			redirectionIndex = i
-			break
-		} else if token == "2>" {
+			goto tokenfounds
+		case "2>":
 			redirection = stderr
 			redirectionIndex = i
-			break
+			goto tokenfounds
+		case "2>>":
+			redirection = stderrappend
+			redirectionIndex = i
+			goto tokenfounds
 		}
 	}
+tokenfounds:
 
 	if redirectionIndex == len(tokens)-1 && redirection != noredirection {
 		return noredirection, redirectionIndex, errors.New("no file specified for redirection")

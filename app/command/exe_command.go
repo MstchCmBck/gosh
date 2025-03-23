@@ -30,7 +30,10 @@ func (e execommand) Execute() error {
 func (e execommand) selectStdoutStream() *os.File {
 	switch e.redirection {
 	case stdout:
-		file, _ := os.OpenFile(e.filepath, os.O_RDWR|os.O_CREATE, 0644)
+		file, _ := os.OpenFile(e.filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		return file
+	case stdoutappend:
+		file, _ := os.OpenFile(e.filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 		return file
 	default:
 		return os.Stdout
@@ -40,7 +43,10 @@ func (e execommand) selectStdoutStream() *os.File {
 func (e execommand) selectStderrStream() *os.File {
 	switch e.redirection {
 	case stderr:
-		file, _ := os.OpenFile(e.filepath, os.O_RDWR|os.O_CREATE, 0644)
+		file, _ := os.OpenFile(e.filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		return file
+	case stderrappend:
+		file, _ := os.OpenFile(e.filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 		return file
 	default:
 		return os.Stdout
