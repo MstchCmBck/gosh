@@ -7,13 +7,11 @@ import "io"
 // - Execute() method to execute the command
 
 type commandline struct {
-	name        string
-	args        []string
-	redirection redirection
-	filepath    string
-	stdin       io.Reader
-	stdout      io.Writer
-	stderr      io.Writer
+	name   string
+	args   []string
+	stdin  io.Reader
+	stdout io.Writer
+	stderr io.Writer
 }
 
 type Command interface {
