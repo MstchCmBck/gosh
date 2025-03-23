@@ -12,7 +12,7 @@ import (
 
 type execommand commandline
 
-func (e execommand) Execute() error {
+func (e execommand) execute() error {
 	out := exec.Command(e.name, e.args...)
 
 	out.Stdin = e.stdin
@@ -21,6 +21,5 @@ func (e execommand) Execute() error {
 
 	err := out.Run()
 
-	close(commandline(e))
 	return err
 }

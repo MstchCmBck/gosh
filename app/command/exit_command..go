@@ -11,12 +11,12 @@ import (
 type exitcommand commandline
 
 func init() {
-	builtinCommands["exit"] = func(params commandline) Command {
+	builtinCommands["exit"] = func(params commandline) command {
 		return exitcommand(params)
 	}
 }
 
-func (e exitcommand) Execute() error {
+func (e exitcommand) execute() error {
 	// If the command has no parameters, exit with code 0
 	if len(e.args) == 0 {
 		os.Exit(0)
@@ -29,6 +29,5 @@ func (e exitcommand) Execute() error {
 	}
 	os.Exit(errCode)
 
-	close(commandline(e))
 	return nil
 }

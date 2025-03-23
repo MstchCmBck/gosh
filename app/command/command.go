@@ -9,6 +9,16 @@ import (
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
+type Command struct {
+	cmd     command
+	cmdline commandline
+}
+
+func (c Command) Execute() error {
+	defer close(c.cmdline)
+	return c.cmd.execute()
+}
+
 type commandline struct {
 	name   string
 	args   []string
@@ -17,8 +27,8 @@ type commandline struct {
 	stderr io.Writer
 }
 
-type Command interface {
-	Execute() error
+type command interface {
+	execute() error
 }
 
 func close(cmd commandline) error {

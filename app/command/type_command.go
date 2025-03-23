@@ -11,12 +11,12 @@ import (
 type typecommand commandline
 
 func init() {
-	builtinCommands["type"] = func(params commandline) Command {
+	builtinCommands["type"] = func(params commandline) command {
 		return typecommand(params)
 	}
 }
 
-func (t typecommand) Execute() error {
+func (t typecommand) execute() error {
 	var output string
 	program := string(t.args[0])
 	_, find := builtinCommands[program]
@@ -36,6 +36,5 @@ func (t typecommand) Execute() error {
 	output = program + " is " + path + "\n"
 	fmt.Fprint(t.stdout, output)
 
-	close(commandline(t))
 	return nil
 }

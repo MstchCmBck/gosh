@@ -7,12 +7,12 @@ import "fmt"
 type echocommand commandline
 
 func init() {
-	builtinCommands["echo"] = func(params commandline) Command {
+	builtinCommands["echo"] = func(params commandline) command {
 		return echocommand(params)
 	}
 }
 
-func (e echocommand) Execute() error {
+func (e echocommand) execute() error {
 	var output string
 	for _, arg := range e.args {
 		output += arg + " "
@@ -20,6 +20,5 @@ func (e echocommand) Execute() error {
 	output += "\n"
 	fmt.Fprint(e.stdout, output)
 
-	close(commandline(e))
 	return nil
 }

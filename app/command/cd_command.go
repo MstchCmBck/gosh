@@ -12,12 +12,12 @@ import (
 type cdcommand commandline
 
 func init() {
-	builtinCommands["cd"] = func(params commandline) Command {
+	builtinCommands["cd"] = func(params commandline) command {
 		return cdcommand(params)
 	}
 }
 
-func (c cdcommand) Execute() error {
+func (c cdcommand) execute() error {
 	var err error
 	dir := string(c.args[0])
 	if c.args[0] == "~" {
@@ -33,6 +33,5 @@ func (c cdcommand) Execute() error {
 	}
 	fmt.Fprint(c.stdout, message)
 
-	close(commandline(c))
 	return err
 }

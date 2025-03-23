@@ -12,12 +12,12 @@ import (
 type pwdcommand commandline
 
 func init() {
-	builtinCommands["pwd"] = func(params commandline) Command {
+	builtinCommands["pwd"] = func(params commandline) command {
 		return pwdcommand(params)
 	}
 }
 
-func (p pwdcommand) Execute() error {
+func (p pwdcommand) execute() error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
@@ -25,6 +25,5 @@ func (p pwdcommand) Execute() error {
 	wd += "\n"
 	fmt.Fprint(p.stdout, wd)
 
-	close(commandline(p))
 	return nil
 }

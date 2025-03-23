@@ -8,11 +8,10 @@ type unknowncommand commandline
 
 // No need to register the UnknownCommand in the builtinCommands map as it's the default command
 
-func (u unknowncommand) Execute() error {
+func (u unknowncommand) execute() error {
 	unknown := string(u.name)
 	output := unknown + ": command not found\n"
 	fmt.Fprint(u.stdout, output)
 
-	close(commandline(u))
 	return nil
 }
