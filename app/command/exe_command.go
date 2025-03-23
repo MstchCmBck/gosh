@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"os/exec"
 )
 
@@ -15,7 +16,8 @@ type ExeCommand struct {
 	parameters  []string
 }
 
-func (e ExeCommand) Execute() (string, error) {
+func (e ExeCommand) Execute() error {
 	out, err := exec.Command(e.commandName, e.parameters...).Output()
-	return string(out), err
+	fmt.Println(string(out))
+	return err
 }

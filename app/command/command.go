@@ -12,5 +12,5 @@ type commandline struct {
 }
 
 type Command interface {
-	Execute() (string, error)
+	Execute() error
 }

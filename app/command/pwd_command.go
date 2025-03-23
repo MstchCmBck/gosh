@@ -1,6 +1,9 @@
 package command
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 // Each new Command must implement the following functions:
 // - init() function to register the command in the builtinCommands map
@@ -14,10 +17,11 @@ func init() {
 
 type PwdCommand []string
 
-func (p PwdCommand) Execute() (string, error) {
+func (p PwdCommand) Execute() error {
 	wd, err := os.Getwd()
 	if err != nil {
-		return "", err
+		return err
 	}
-	return wd, nil
+	fmt.Println(wd)
+	return nil
 }

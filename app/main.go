@@ -15,18 +15,9 @@ func main() {
 		// Read user input
 		input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		cmd := command.Factory(input)
-		_, err := cmd.Execute()
+		err := cmd.Execute()
 		if err != nil {
 			fmt.Print(err)
 		}
-
-		// TODO: This should be handle by the command itself
-		// To remove soon
-		// if prsr.Redirection == parser.Stdout {
-		// 	os.WriteFile(prsr.Filepath, []byte(output), 0644)
-		// } else {
-		// 	fmt.Println(output)
-		// }
-
 	}
 }

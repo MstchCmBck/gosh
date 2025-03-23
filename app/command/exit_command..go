@@ -16,7 +16,7 @@ func init() {
 	}
 }
 
-func (e ExitCommand) Execute() (string, error) {
+func (e ExitCommand) Execute() error {
 	// If the command has no parameters, exit with code 0
 	if len(e) == 0 {
 		os.Exit(0)
@@ -25,8 +25,8 @@ func (e ExitCommand) Execute() (string, error) {
 	errCode, err := strconv.Atoi(e[0])
 	// If the conversion fails, consider the command as not an exit command
 	if err != nil {
-		return "", errors.New("exit command parameter is not a number")
+		return errors.New("exit command parameter is not a number")
 	}
 	os.Exit(errCode)
-	return "", nil
+	return nil
 }
