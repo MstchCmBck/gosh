@@ -22,14 +22,14 @@ func (t typecommand) Execute() error {
 	_, find := builtinCommands[program]
 	if find {
 		output = program + " is a shell builtin"
-		fmt.Println(output)
+		print(output, commandline(t))
 		return nil
 	}
 
 	path, err := exec.LookPath(program)
 	if err != nil {
 		output = program + ": not found"
-		fmt.Println(output)
+		print(output, commandline(t))
 		return nil
 	}
 

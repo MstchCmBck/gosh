@@ -1,7 +1,5 @@
 package command
 
-import "fmt"
-
 // echocommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
 type echocommand commandline
@@ -17,6 +15,6 @@ func (e echocommand) Execute() error {
 	for _, arg := range e.args {
 		output += arg + " "
 	}
-	fmt.Println(output)
+	print(output, commandline(e))
 	return nil
 }

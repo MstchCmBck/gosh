@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -22,6 +21,6 @@ func (p pwdcommand) Execute() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(wd)
+	print(wd, commandline(p))
 	return nil
 }
