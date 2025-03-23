@@ -19,9 +19,9 @@ const (
 func print(output string, cmd commandline) {
 	switch cmd.redirection {
 	case noredirection:
-		fmt.Println(output)
+		fmt.Print(output)
 	case stdout:
-		file, err := os.OpenFile("notes.txt", os.O_RDWR|os.O_CREATE, 0644)
+		file, err := os.OpenFile(cmd.filepath, os.O_RDWR|os.O_CREATE, 0644)
 		if err != nil {
 			fmt.Println(err)
 		}

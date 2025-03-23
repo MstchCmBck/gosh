@@ -15,6 +15,7 @@ func (e echocommand) Execute() error {
 	for _, arg := range e.args {
 		output += arg + " "
 	}
+	output += "\n"
 	print(output, commandline(e))
 	return nil
 }

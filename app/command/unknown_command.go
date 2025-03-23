@@ -8,7 +8,7 @@ type unknowncommand commandline
 
 func (u unknowncommand) Execute() error {
 	unknown := string(u.name)
-	output := unknown + ": command not found"
+	output := unknown + ": command not found\n"
 	print(output, commandline(u))
 	return nil
 }

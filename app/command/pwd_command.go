@@ -21,6 +21,7 @@ func (p pwdcommand) Execute() error {
 	if err != nil {
 		return err
 	}
+	wd += "\n"
 	print(wd, commandline(p))
 	return nil
 }
