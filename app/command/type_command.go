@@ -34,7 +34,7 @@ func (t typecommand) Execute() error {
 		return nil
 	}
 
-	output = program + " is " + path
+	output = program + " is " + path + "\n"
 	printOut(output, commandline(t))
 	printErr("", commandline(t))
 	return nil

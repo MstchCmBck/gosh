@@ -32,11 +32,9 @@ func (e execommand) selectStdoutStream() *os.File {
 	case stdout:
 		file, _ := os.OpenFile(e.filepath, os.O_RDWR|os.O_CREATE, 0644)
 		return file
-	case noredirection:
 	default:
 		return os.Stdout
 	}
-	return os.Stdout
 }
 
 func (e execommand) selectStderrStream() *os.File {
@@ -44,22 +42,16 @@ func (e execommand) selectStderrStream() *os.File {
 	case stderr:
 		file, _ := os.OpenFile(e.filepath, os.O_RDWR|os.O_CREATE, 0644)
 		return file
-	case noredirection:
 	default:
 		return os.Stdout
 	}
-	return os.Stdout
 }
 
 func (e execommand) closeStream(stream *os.File) {
-	switch e.redirection {
-	case stdout:
+	// Only close if it's not Stdout or Stderr
+	if stream != os.Stdout && stream != os.Stderr {
 		if err := stream.Close(); err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 		}
-		return
-	case noredirection:
-	default:
-		return
 	}
 }
