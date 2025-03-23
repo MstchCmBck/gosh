@@ -9,15 +9,15 @@ import (
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
+type cdcommand commandline
+
 func init() {
 	builtinCommands["cd"] = func(params commandline) Command {
-		return CdCommand(params)
+		return cdcommand(params)
 	}
 }
 
-type CdCommand commandline
-
-func (c CdCommand) Execute() error {
+func (c cdcommand) Execute() error {
 	var err error
 	dir := string(c.args[0])
 	if c.args[0] == "~" {

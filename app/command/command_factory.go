@@ -25,12 +25,12 @@ func Factory(input string) Command {
 	_, err := exec.LookPath(command.name)
 	if err == nil {
 		// Cast command to ExeCommand
-		return ExeCommand(command)
+		return execommand(command)
 	}
 
 	// For any other case, return an UnknownCommand
 	// Cast command to UnknwonCommand
-	return UnknownCommand(command)
+	return unknowncommand(command)
 }
 
 // NewParser creates a new parser and immediately parses the input

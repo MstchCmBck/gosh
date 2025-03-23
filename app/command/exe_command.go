@@ -11,9 +11,9 @@ import (
 
 // No need to implement init for this kind of not builtin command
 
-type ExeCommand commandline
+type execommand commandline
 
-func (e ExeCommand) Execute() error {
+func (e execommand) Execute() error {
 	out, err := exec.Command(e.name, e.args...).Output()
 	fmt.Println(string(out))
 	return err

@@ -9,15 +9,15 @@ import (
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
-type PwdCommand commandline
+type pwdcommand commandline
 
 func init() {
 	builtinCommands["pwd"] = func(params commandline) Command {
-		return PwdCommand(params)
+		return pwdcommand(params)
 	}
 }
 
-func (p PwdCommand) Execute() error {
+func (p pwdcommand) Execute() error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err

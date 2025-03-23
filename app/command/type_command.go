@@ -8,15 +8,15 @@ import (
 // TypeCommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
 
-type TypeCommand commandline
+type typecommand commandline
 
 func init() {
 	builtinCommands["type"] = func(params commandline) Command {
-		return TypeCommand(params)
+		return typecommand(params)
 	}
 }
 
-func (t TypeCommand) Execute() error {
+func (t typecommand) Execute() error {
 	var output string
 	program := string(t.args[0])
 	_, find := builtinCommands[program]

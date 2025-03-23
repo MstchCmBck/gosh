@@ -6,17 +6,17 @@ import (
 	"strconv"
 )
 
-// ExitCommand string contains parameters send with the exit command
+// exitcommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
-type ExitCommand commandline
+type exitcommand commandline
 
 func init() {
 	builtinCommands["exit"] = func(params commandline) Command {
-		return ExitCommand(params)
+		return exitcommand(params)
 	}
 }
 
-func (e ExitCommand) Execute() error {
+func (e exitcommand) Execute() error {
 	// If the command has no parameters, exit with code 0
 	if len(e.args) == 0 {
 		os.Exit(0)

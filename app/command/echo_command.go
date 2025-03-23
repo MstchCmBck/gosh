@@ -2,17 +2,17 @@ package command
 
 import "fmt"
 
-// EchoCommand string contains parameters send with the exit command
+// echocommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
-type EchoCommand commandline
+type echocommand commandline
 
 func init() {
 	builtinCommands["echo"] = func(params commandline) Command {
-		return EchoCommand(params)
+		return echocommand(params)
 	}
 }
 
-func (e EchoCommand) Execute() error {
+func (e echocommand) Execute() error {
 	var output string
 	for _, arg := range e.args {
 		output += arg + " "
