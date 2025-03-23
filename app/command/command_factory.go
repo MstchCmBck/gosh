@@ -8,7 +8,7 @@ import (
 )
 
 // CommandBuilder is a function that takes a string and returns a Command
-type CommandBuilder func(params []string) Command
+type CommandBuilder func(params commandline) Command
 
 // builtinCommands is a map of command names to their respective CommandBuilder
 // It's populated by the init() function of each command
@@ -19,16 +19,18 @@ func Factory(input string) Command {
 
 	// Switch case to determine which command to return
 	if builder, exists := builtinCommands[command.name]; exists {
-		return builder(command.args)
+		return builder(command)
 	}
 
 	_, err := exec.LookPath(command.name)
 	if err == nil {
-		return ExeCommand{command.name, command.args}
+		// Cast command to ExeCommand
+		return ExeCommand(command)
 	}
 
 	// For any other case, return an UnknownCommand
-	return UnknownCommand(command.name)
+	// Cast command to UnknwonCommand
+	return UnknownCommand(command)
 }
 
 // NewParser creates a new parser and immediately parses the input

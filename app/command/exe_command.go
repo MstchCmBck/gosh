@@ -11,13 +11,10 @@ import (
 
 // No need to implement init for this kind of not builtin command
 
-type ExeCommand struct {
-	commandName string
-	parameters  []string
-}
+type ExeCommand commandline
 
 func (e ExeCommand) Execute() error {
-	out, err := exec.Command(e.commandName, e.parameters...).Output()
+	out, err := exec.Command(e.name, e.args...).Output()
 	fmt.Println(string(out))
 	return err
 }

@@ -9,13 +9,13 @@ import (
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
+type PwdCommand commandline
+
 func init() {
-	builtinCommands["pwd"] = func(params []string) Command {
+	builtinCommands["pwd"] = func(params commandline) Command {
 		return PwdCommand(params)
 	}
 }
-
-type PwdCommand []string
 
 func (p PwdCommand) Execute() error {
 	wd, err := os.Getwd()
