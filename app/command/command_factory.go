@@ -31,13 +31,6 @@ func Factory(input string) Command {
 	return UnknownCommand(command.name)
 }
 
-type commandline struct {
-	name        string
-	args        []string
-	redirection redirection
-	filepath    string
-}
-
 // NewParser creates a new parser and immediately parses the input
 func newParser(input string) commandline {
 	var command commandline

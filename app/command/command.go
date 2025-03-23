@@ -4,6 +4,13 @@ package command
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
+type commandline struct {
+	name        string
+	args        []string
+	redirection redirection
+	filepath    string
+}
+
 type Command interface {
 	Execute() (string, error)
 }
