@@ -15,9 +15,6 @@ func main() {
 		// Read user input
 		input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		cmd := command.Factory(input)
-		err := cmd.Execute()
-		if err != nil {
-			fmt.Print(err)
-		}
+		cmd.Execute()
 	}
 }
