@@ -3,6 +3,8 @@ package command
 import (
 	"fmt"
 	"os/exec"
+
+	"github.com/chzyer/readline"
 )
 
 // TypeCommand string contains parameters send with the exit command
@@ -14,6 +16,7 @@ func init() {
 	builtinCommands["type"] = func(params commandline) command {
 		return typecommand(params)
 	}
+	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("type"))
 }
 
 func (t typecommand) execute() error {

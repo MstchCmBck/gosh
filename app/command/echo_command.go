@@ -1,6 +1,10 @@
 package command
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/chzyer/readline"
+)
 
 // echocommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
@@ -10,6 +14,7 @@ func init() {
 	builtinCommands["echo"] = func(params commandline) command {
 		return echocommand(params)
 	}
+	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("echo"))
 }
 
 func (e echocommand) execute() error {

@@ -3,6 +3,8 @@ package command
 import (
 	"fmt"
 	"os"
+
+	"github.com/chzyer/readline"
 )
 
 // Each new Command must implement the following functions:
@@ -15,6 +17,8 @@ func init() {
 	builtinCommands["pwd"] = func(params commandline) command {
 		return pwdcommand(params)
 	}
+
+	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("pwd"))
 }
 
 func (p pwdcommand) execute() error {

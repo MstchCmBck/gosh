@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// CommandBuilder is a function that takes a string and returns a Command
+// CommandBuilder is a function that takes a commandline struct and returns a Command
 type CommandBuilder func(params commandline) command
 
 // builtinCommands is a map of command names to their respective CommandBuilder

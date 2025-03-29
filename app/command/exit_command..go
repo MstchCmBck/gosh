@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os"
 	"strconv"
+
+	"github.com/chzyer/readline"
 )
 
 // exitcommand string contains parameters send with the exit command
@@ -14,6 +16,8 @@ func init() {
 	builtinCommands["exit"] = func(params commandline) command {
 		return exitcommand(params)
 	}
+
+	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("exit"))
 }
 
 func (e exitcommand) execute() error {

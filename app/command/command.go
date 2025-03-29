@@ -3,11 +3,15 @@ package command
 import (
 	"io"
 	"os"
+
+	"github.com/chzyer/readline"
 )
 
 // Each new Command must implement the following functions:
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
+
+var BuiltinCompletion = make([]readline.PrefixCompleterInterface, 0)
 
 type Command struct {
 	cmd     command
