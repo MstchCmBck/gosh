@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/chzyer/readline"
 	"github.com/codecrafters-io/shell-starter-go/app/command"
@@ -31,8 +33,19 @@ func main() {
 
 		commands := command.Factory(line)
 
+		var wg sync.WaitGroup
+
 		for _, cmd := range commands {
-			cmd.Execute()
+			wg.Add(1)
+			go func(c command.Command) {
+				defer wg.Done()
+				err := c.Execute()
+				if err != nil {
+					fmt.Printf("Command failed: %v\n", err)
+				}
+			}(cmd)
 		}
+
+		wg.Wait()
 	}
 }

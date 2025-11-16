@@ -35,14 +35,23 @@ type command interface {
 	execute() error
 }
 
-func close(cmd parameters) error {
+func close(params parameters) error {
+	var err_stdin error
 	var err_stdout error
 	var err_stderr error
-	if closer, ok := cmd.stdout.(io.Closer); ok && cmd.stdout != os.Stdout {
+
+	if closer, ok := params.stdin.(io.Closer); ok && params.stdin != os.Stdin {
+		err_stdin = closer.Close()
+	}
+	if closer, ok := params.stdout.(io.Closer); ok && params.stdout != os.Stdout {
 		err_stdout = closer.Close()
 	}
-	if closer, ok := cmd.stderr.(io.Closer); ok && cmd.stderr != os.Stderr {
+	if closer, ok := params.stderr.(io.Closer); ok && params.stderr != os.Stderr {
 		err_stderr = closer.Close()
+	}
+
+	if err_stdin != nil {
+		return err_stdin
 	}
 	if err_stdout != nil {
 		return err_stdout
