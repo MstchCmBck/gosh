@@ -19,20 +19,18 @@ func Factory(input string) []Command {
 	var commandList []Command
 
 	for _, params := range parametersList {
-		// Switch case to determine which command to return
+		var cmd command
+		var err error
+
 		if builder, exists := builtinCommands[params.name]; exists {
-			commandList = append(commandList, Command{builder(params), params})
+			cmd = builder(params)
+		} else if _, err = exec.LookPath(params.name); err == nil {
+			cmd = execommand(params)
+		} else {
+			cmd = unknowncommand(params)
 		}
 
-		_, err := exec.LookPath(params.name)
-		if err == nil {
-			// Cast command to ExeCommand
-			commandList = append(commandList, Command{execommand(params), params})
-		}
-
-		// For any other case, return an UnknownCommand
-		// Cast command to UnknwonCommand
-		commandList = append(commandList, Command{unknowncommand(params), params})
+		commandList = append(commandList, Command{cmd, params})
 	}
 
 	return commandList
@@ -46,9 +44,7 @@ func createParametersPerCommand(input string) []parameters {
 	inSingleQuote := false
 	inDoubleQuote := false
 	escapeNext := false
-	isPiped := false
-	var reader io.Reader
-	var writer io.Writer
+	var nextStdin io.Reader = os.Stdin
 
 	for i, char := range input {
 		switch {
@@ -78,10 +74,8 @@ func createParametersPerCommand(input string) []parameters {
 			if currentToken.Len() > 0 {
 				tokens = append(tokens, currentToken.String())
 			}
-			params := createParams(tokens)
-			if isPiped {
-				params.stdin = reader
-			}
+			params := createParams(tokens, nextStdin)
+			nextStdin = os.Stdin
 			parametersList = append(parametersList, params)
 			// Clear the current tokens array as the next tokens belongs to the next command
 			tokens = nil
@@ -90,13 +84,15 @@ func createParametersPerCommand(input string) []parameters {
 			if currentToken.Len() > 0 {
 				tokens = append(tokens, currentToken.String())
 			}
-			params := createParams(tokens)
+			params := createParams(tokens, nextStdin)
+
+			r, w := io.Pipe()
+			params.stdout = w
+			nextStdin = r
+
 			parametersList = append(parametersList, params)
 			tokens = nil
 			currentToken.Reset()
-			isPiped = true
-			reader, writer = io.Pipe()
-			params.stdout = writer
 		default:
 			currentToken.WriteRune(char)
 		}
@@ -104,20 +100,17 @@ func createParametersPerCommand(input string) []parameters {
 
 	if currentToken.Len() > 0 {
 		tokens = append(tokens, currentToken.String())
-		params := createParams(tokens)
-		if isPiped {
-			params.stdin = reader
-		}
+		params := createParams(tokens, nextStdin)
 		parametersList = append(parametersList, params)
 	}
 
 	return parametersList
 }
 
-func createParams(tokens []string) parameters {
+func createParams(tokens []string, stdin io.Reader) parameters {
 	var params parameters
 	params.name = tokens[0]
-	params.stdin = os.Stdin
+	params.stdin = stdin
 	params.stdout = os.Stdout
 	params.stderr = os.Stderr
 
