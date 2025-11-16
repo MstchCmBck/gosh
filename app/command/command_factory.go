@@ -14,7 +14,7 @@ type CommandBuilder func(params parameters) command
 var builtinCommands = make(map[string]CommandBuilder)
 
 func Factory(input string) []Command {
-	parametersList := newParser(input)
+	parametersList := createParametersPerCommand(input)
 	var commandList []Command
 
 	for _, params := range parametersList {
@@ -37,23 +37,9 @@ func Factory(input string) []Command {
 	return commandList
 }
 
-// NewParser creates a new parser and immediately parses the input
-func newParser(input string) []parameters {
-	var parametersArray []parameters
-	tokensArray := createTokens(input)
-	for _, tokens := range tokensArray {
-		params := createParams(tokens)
-		parametersArray = append(parametersArray, params)
-	}
-	return parametersArray
-}
-
-// Return an array of array.
-// The first array correspond to a list of commands.
-// The second array is the list of arguments for each command
-func createTokens(input string) [][]string {
+func createParametersPerCommand(input string) []parameters {
 	var tokens []string
-	var commandSplit [][]string
+	var parametersList []parameters
 
 	var currentToken strings.Builder
 	inSingleQuote := false
@@ -88,7 +74,8 @@ func createTokens(input string) [][]string {
 			if currentToken.Len() > 0 {
 				tokens = append(tokens, currentToken.String())
 			}
-			commandSplit = append(commandSplit, tokens)
+			params := createParams(tokens)
+			parametersList = append(parametersList, params)
 			// Clear the current tokens array as the next tokens belongs to the next command
 			tokens = nil
 			currentToken.Reset()
@@ -99,10 +86,11 @@ func createTokens(input string) [][]string {
 
 	if currentToken.Len() > 0 {
 		tokens = append(tokens, currentToken.String())
-		commandSplit = append(commandSplit, tokens)
+		params := createParams(tokens)
+		parametersList = append(parametersList, params)
 	}
 
-	return commandSplit
+	return parametersList
 }
 
 func createParams(tokens []string) parameters {
