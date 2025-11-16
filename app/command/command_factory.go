@@ -1,6 +1,7 @@
 package command
 
 import (
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -45,6 +46,9 @@ func createParametersPerCommand(input string) []parameters {
 	inSingleQuote := false
 	inDoubleQuote := false
 	escapeNext := false
+	isPiped := false
+	var reader io.Reader
+	var writer io.Writer
 
 	for i, char := range input {
 		switch {
@@ -75,10 +79,24 @@ func createParametersPerCommand(input string) []parameters {
 				tokens = append(tokens, currentToken.String())
 			}
 			params := createParams(tokens)
+			if isPiped {
+				params.stdin = reader
+			}
 			parametersList = append(parametersList, params)
 			// Clear the current tokens array as the next tokens belongs to the next command
 			tokens = nil
 			currentToken.Reset()
+		case char == '|' && !inSingleQuote && !inDoubleQuote:
+			if currentToken.Len() > 0 {
+				tokens = append(tokens, currentToken.String())
+			}
+			params := createParams(tokens)
+			parametersList = append(parametersList, params)
+			tokens = nil
+			currentToken.Reset()
+			isPiped = true
+			reader, writer = io.Pipe()
+			params.stdout = writer
 		default:
 			currentToken.WriteRune(char)
 		}
@@ -87,6 +105,9 @@ func createParametersPerCommand(input string) []parameters {
 	if currentToken.Len() > 0 {
 		tokens = append(tokens, currentToken.String())
 		params := createParams(tokens)
+		if isPiped {
+			params.stdin = reader
+		}
 		parametersList = append(parametersList, params)
 	}
 
