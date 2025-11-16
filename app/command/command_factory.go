@@ -36,12 +36,17 @@ func Factory(input string) Command {
 // NewParser creates a new parser and immediately parses the input
 func newParser(input string) parameters {
 	tokens := createTokens(input)
-	params := createParams(tokens)
+	// TODO handle the whole array
+	params := createParams(tokens[0])
 	return params
 }
 
-func createTokens(input string) []string {
+// Return an array of array.
+// The first array correspond to a list of commands.
+// The second array is the list of arguments for each command
+func createTokens(input string) [][]string {
 	var tokens []string
+	var commandSplit [][]string
 
 	var currentToken strings.Builder
 	inSingleQuote := false
@@ -72,6 +77,14 @@ func createTokens(input string) []string {
 			}
 		case char == '\n' && !inSingleQuote && !inDoubleQuote:
 			continue
+		case char == ';' && !inSingleQuote && !inDoubleQuote:
+			if currentToken.Len() > 0 {
+				tokens = append(tokens, currentToken.String())
+			}
+			commandSplit = append(commandSplit, tokens)
+			// Clear the current tokens array as the next tokens belongs to the next command
+			tokens = nil
+			currentToken.Reset()
 		default:
 			currentToken.WriteRune(char)
 		}
@@ -79,9 +92,10 @@ func createTokens(input string) []string {
 
 	if currentToken.Len() > 0 {
 		tokens = append(tokens, currentToken.String())
+		commandSplit = append(commandSplit, tokens)
 	}
 
-	return tokens
+	return commandSplit
 }
 
 func createParams(tokens []string) parameters {
