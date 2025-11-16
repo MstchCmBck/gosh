@@ -30,6 +30,7 @@ func main() {
 		}
 
 		cmd := command.Factory(line)
-		cmd.Execute()
+		// TODO Execute each command
+		cmd[0].Execute()
 	}
 }

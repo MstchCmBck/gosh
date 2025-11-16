@@ -13,24 +13,28 @@ type CommandBuilder func(params parameters) command
 // It's populated by the init() function of each command
 var builtinCommands = make(map[string]CommandBuilder)
 
-func Factory(input string) Command {
-	params := newParser(input)
+func Factory(input string) []Command {
+	parametersList := newParser(input)
+	var commandList []Command
 
-	// Switch case to determine which command to return
-	if builder, exists := builtinCommands[params.name]; exists {
+	for _, params := range parametersList {
+		// Switch case to determine which command to return
+		if builder, exists := builtinCommands[params.name]; exists {
+			commandList = append(commandList, Command{builder(params), params})
+		}
 
-		return Command{builder(params), params}
+		_, err := exec.LookPath(params.name)
+		if err == nil {
+			// Cast command to ExeCommand
+			commandList = append(commandList, Command{execommand(params), params})
+		}
+
+		// For any other case, return an UnknownCommand
+		// Cast command to UnknwonCommand
+		commandList = append(commandList, Command{unknowncommand(params), params})
 	}
 
-	_, err := exec.LookPath(params.name)
-	if err == nil {
-		// Cast command to ExeCommand
-		return Command{execommand(params), params}
-	}
-
-	// For any other case, return an UnknownCommand
-	// Cast command to UnknwonCommand
-	return Command{unknowncommand(params), params}
+	return commandList
 }
 
 // NewParser creates a new parser and immediately parses the input
