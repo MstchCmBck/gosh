@@ -10,7 +10,7 @@ import (
 
 // No need to implement init for this kind of not builtin command
 
-type execommand commandline
+type execommand parameters
 
 func (e execommand) execute() error {
 	out := exec.Command(e.name, e.args...)

@@ -8,10 +8,10 @@ import (
 
 // echocommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
-type echocommand commandline
+type echocommand parameters
 
 func init() {
-	builtinCommands["echo"] = func(params commandline) command {
+	builtinCommands["echo"] = func(params parameters) command {
 		return echocommand(params)
 	}
 	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("echo"))

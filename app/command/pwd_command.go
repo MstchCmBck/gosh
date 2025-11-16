@@ -11,10 +11,10 @@ import (
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
-type pwdcommand commandline
+type pwdcommand parameters
 
 func init() {
-	builtinCommands["pwd"] = func(params commandline) command {
+	builtinCommands["pwd"] = func(params parameters) command {
 		return pwdcommand(params)
 	}
 

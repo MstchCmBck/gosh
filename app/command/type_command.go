@@ -10,10 +10,10 @@ import (
 // TypeCommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
 
-type typecommand commandline
+type typecommand parameters
 
 func init() {
-	builtinCommands["type"] = func(params commandline) command {
+	builtinCommands["type"] = func(params parameters) command {
 		return typecommand(params)
 	}
 	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("type"))

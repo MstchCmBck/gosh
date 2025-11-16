@@ -10,10 +10,10 @@ import (
 
 // exitcommand string contains parameters send with the exit command
 // It implement the Execute method of the Command interface
-type exitcommand commandline
+type exitcommand parameters
 
 func init() {
-	builtinCommands["exit"] = func(params commandline) command {
+	builtinCommands["exit"] = func(params parameters) command {
 		return exitcommand(params)
 	}
 

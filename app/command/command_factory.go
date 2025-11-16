@@ -7,37 +7,37 @@ import (
 )
 
 // CommandBuilder is a function that takes a commandline struct and returns a Command
-type CommandBuilder func(params commandline) command
+type CommandBuilder func(params parameters) command
 
 // builtinCommands is a map of command names to their respective CommandBuilder
 // It's populated by the init() function of each command
 var builtinCommands = make(map[string]CommandBuilder)
 
 func Factory(input string) Command {
-	command := newParser(input)
+	params := newParser(input)
 
 	// Switch case to determine which command to return
-	if builder, exists := builtinCommands[command.name]; exists {
+	if builder, exists := builtinCommands[params.name]; exists {
 
-		return Command{builder(command), command}
+		return Command{builder(params), params}
 	}
 
-	_, err := exec.LookPath(command.name)
+	_, err := exec.LookPath(params.name)
 	if err == nil {
 		// Cast command to ExeCommand
-		return Command{execommand(command), command}
+		return Command{execommand(params), params}
 	}
 
 	// For any other case, return an UnknownCommand
 	// Cast command to UnknwonCommand
-	return Command{unknowncommand(command), command}
+	return Command{unknowncommand(params), params}
 }
 
 // NewParser creates a new parser and immediately parses the input
-func newParser(input string) commandline {
+func newParser(input string) parameters {
 	tokens := createTokens(input)
-	cmd := createCommand(tokens)
-	return cmd
+	params := createParams(tokens)
+	return params
 }
 
 func createTokens(input string) []string {
@@ -84,34 +84,34 @@ func createTokens(input string) []string {
 	return tokens
 }
 
-func createCommand(tokens []string) commandline {
-	var cmd commandline
-	cmd.name = tokens[0]
-	cmd.stdin = os.Stdin
-	cmd.stdout = os.Stdout
-	cmd.stderr = os.Stderr
+func createParams(tokens []string) parameters {
+	var params parameters
+	params.name = tokens[0]
+	params.stdin = os.Stdin
+	params.stdout = os.Stdout
+	params.stderr = os.Stderr
 
 	// The user input is just one token
 	// We just have a command name
 	if len(tokens) == 1 {
-		return cmd
+		return params
 	}
 
 	i, token := findRedirectToken(tokens)
 
-	cmd.args = tokens[1:i]
+	params.args = tokens[1:i]
 
 	// The user doesn't give a filepath after the redirection
 	// We keep the stdout as it is
 	if len(tokens) == i {
-		return cmd
+		return params
 	}
 
 	filepath := tokens[i+1]
 
-	setStdout(token, cmd, filepath)
+	setStdout(token, params, filepath)
 
-	return cmd
+	return params
 }
 
 func findRedirectToken(tokens []string) (int, string) {
@@ -124,15 +124,15 @@ func findRedirectToken(tokens []string) (int, string) {
 	return len(tokens), ""
 }
 
-func setStdout(token string, cmd commandline, filepath string) {
+func setStdout(token string, params parameters, filepath string) {
 	switch token {
 	case ">", "1>":
-		cmd.stdout, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		params.stdout, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	case ">>", "1>>":
-		cmd.stdout, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		params.stdout, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	case "2>":
-		cmd.stderr, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		params.stderr, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	case "2>>":
-		cmd.stderr, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		params.stderr, _ = os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	}
 }

@@ -9,10 +9,10 @@ import (
 // - init() function to register the command in the builtinCommands map
 // - Execute() method to execute the command
 
-type cdcommand commandline
+type cdcommand parameters
 
 func init() {
-	builtinCommands["cd"] = func(params commandline) command {
+	builtinCommands["cd"] = func(params parameters) command {
 		return cdcommand(params)
 	}
 }

@@ -14,16 +14,16 @@ import (
 var BuiltinCompletion = make([]readline.PrefixCompleterInterface, 0)
 
 type Command struct {
-	cmd     command
-	cmdline commandline
+	cmd    command
+	params parameters
 }
 
 func (c Command) Execute() error {
-	defer close(c.cmdline)
+	defer close(c.params)
 	return c.cmd.execute()
 }
 
-type commandline struct {
+type parameters struct {
 	name   string
 	args   []string
 	stdin  io.Reader
@@ -35,7 +35,7 @@ type command interface {
 	execute() error
 }
 
-func close(cmd commandline) error {
+func close(cmd parameters) error {
 	var err_stdout error
 	var err_stderr error
 	if closer, ok := cmd.stdout.(io.Closer); ok && cmd.stdout != os.Stdout {
