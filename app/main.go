@@ -29,8 +29,10 @@ func main() {
 			continue
 		}
 
-		cmd := command.Factory(line)
-		// TODO Execute each command
-		cmd[0].Execute()
+		commands := command.Factory(line)
+
+		for _, cmd := range commands {
+			cmd.Execute()
+		}
 	}
 }
