@@ -34,11 +34,14 @@ func Factory(input string) Command {
 }
 
 // NewParser creates a new parser and immediately parses the input
-func newParser(input string) parameters {
-	tokens := createTokens(input)
-	// TODO handle the whole array
-	params := createParams(tokens[0])
-	return params
+func newParser(input string) []parameters {
+	var parametersArray []parameters
+	tokensArray := createTokens(input)
+	for _, tokens := range tokensArray {
+		params := createParams(tokens)
+		parametersArray = append(parametersArray, params)
+	}
+	return parametersArray
 }
 
 // Return an array of array.
