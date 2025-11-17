@@ -7,12 +7,13 @@ import (
 	"github.com/chzyer/readline"
 )
 
-// Each new Command must implement the following functions:
-// - init() function to register the command in the builtinCommands map
-// - Execute() method to execute the command
-
+// pwdcommand implements the "pwd" command, which prints the current working directory.
+// It retrieves the current working directory using os.Getwd() and prints it to standard output.
+// It also registers itself in the builtinCommands map and adds "pwd" to the completion suggestions.
+// pwdcommand implements the Command interface.
 type pwdcommand parameters
 
+// init registers the pwdcommand in the builtinCommands map and adds "pwd" to the completion suggestions.
 func init() {
 	builtinCommands["pwd"] = func(params parameters) command {
 		return pwdcommand(params)
@@ -21,6 +22,7 @@ func init() {
 	BuiltinCompletion = append(BuiltinCompletion, readline.PcItem("pwd"))
 }
 
+// execute retrieves the current working directory and prints it to standard output.
 func (p pwdcommand) execute() error {
 	wd, err := os.Getwd()
 	if err != nil {
